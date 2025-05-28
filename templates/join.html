@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundensuche</title>
+</head>
+<body>
+    <h1> Aufgabe:</h1>
+    Auf dieser Seite kann nach Kunden mit dem Namen gesucht werden, zusätzlich kann die Tabelle in der gesucht werden soll gewählt werden. Die im Hintergrund verwendete SQL Query ist:
+    <p style="color:blue;">SELECT * FROM {tabelle} WHERE vorname = "{vorname}" OR nachname = "{nachname}"</p>
+    Für {vorname}, {nachname} und {Tabelle} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt.
+
+    <h3>Ziel:</h3>
+    Das Ziel ist es hier auch die Passwörter der Kunden auszulesen.
+    <h1>Kundensuche</h1>
+
+    <form method="post">
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname"><br><br>
+
+        <label for="nachname">Nachname:</label>
+        <input type="text" name="nachname"><br><br>
+
+        <label for="Tabelle">Tabelle:</label>
+        <input type="text" name="tabelle" value="Kunden"><br><br>
+
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if fehlermeldung %}
+        <p style="color:red;">{{ fehlermeldung }}</p>
+    {% endif %}
+
+    {% if query is not none %}
+        <h3>Tatsächlich ausgeführte SQL Query.</h3>
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+<h3>Hilfen:</h3>
+    <details>
+    <summary>Hilfe 1:</summary>
+    <p>Die Passwörter stehen in einer anderen Tabelle. Die Tabelle heißt <b>Kunden_Passwoerter</b> und die Spalte mit der KundenID heißt <b>KundenID</b></p>
+    </details>
+    <details>
+    <summary>Hilfe 2:</summary>
+    <p>Greife das Feld Tabelle an. Man kann nicht direkt die Tabelle ändern, da es sonst die Spalte Vorname nicht gibt. Du musst also einen JOIN hinzufügen und die beiden Tabellen zusammenfügen.</b></p>
+    </details>
+    <details>
+    <summary>Hilfe 3:</summary>
+    <p>Gib folgenden JOIN Befehl in das Feld Tabelle ein: <b>Kunden JOIN Kunden_Passwoerter ON Kunden.ID = Kunden_Passwoerter.KundenID</b> <br> Jetzt musst du nur noch alle Kunden ausgeben (siehe bei der ersten Seite zur Kundensuche)</p>
+    </details>
+    <details>
+    <summary>Hilfe 4:</summary>
+    <p>Gib folgenden JOIN Befehl in das Feld Tabelle ein: <b>Kunden JOIN Kunden_Passwoerter ON Kunden.ID = Kunden_Passwoerter.KundenID</b> <br> Gib bei Vorname <b>" OR "1"="1</b> ein. Vollziehe nach, was gerade passiert ist. Welches Passwort hat Claudia Höfig?</p>
+    </details>
+
+    {% if daten is not none %}
+        <h2>Suchergebnisse</h2>
+        {% if daten %}
+         {% for kunde in daten %}
+         {{ kunde }}
+         <br>
+         {% endfor %}        
+        {% else %}
+            <p>Keine Ergebnisse gefunden.</p>
+        {% endif %}
+    {% endif %}
+    <a href="/">Zurück</a>
+</body>
+</html>

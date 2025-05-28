@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundensuche</title>
+</head>
+<body>
+    <h1> Aufgabe:</h1>
+    Auf dieser Seite kann nach Kunden mit dem Namen gesucht werden. Die im Hintergrund verwendete SQL Query ist:
+    <p style="color:blue;">SELECT * FROM Kunden WHERE vorname = "{vorname}" OR nachname = "{nachname}"</p>
+    Für {vorname} und {nachname} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt.
+
+
+    <p style="border: 1px solid black;">
+         <details>
+    <summary><b>SQL-Injection</b></summary>
+    Bei einer SQL-Injection ist das Ziel mit den Eingabemöglichkeiten (wie z.B: hier Vorname und Nachname) die SQL Query so zu verändern, dass zum Beispiel mehr Informationen ausgegeben werden als vorgesehen. Damit kann man oftmals auf die komplette Datenbank zugreifen.<br>
+    <b>Beispiel:</b> <br>
+    Es wird neben dem Namen noch ein "OR 1=1" hinzugefügt. Die Bedingung 1=1 ist immer wahr, in Verbindung mit OR müssten dann alle Einträge der Datenbank angezeigt werden. Aber Achtung! Es funktioniert nur, wenn die Anführungszeichen so eingegeben werden, dass kein Fehler entsteht und das OR 1=1 nicht in den Anführungszeichen steht.
+</details></p>
+
+<h3>Ziel:</h3>
+    Das Ziel ist es hier alle Kundendaten auszulesen.
+    <h1>Kundensuche</h1>
+
+    <form method="post">
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname"><br><br>
+
+        <label for="nachname">Nachname:</label>
+        <input type="text" name="nachname"><br><br>
+
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if fehlermeldung %}
+        <p style="color:red;">{{ fehlermeldung }}</p>
+    {% endif %}
+
+    {% if query is not none %}
+        <h3>Tatsächlich ausgeführte SQL Query.</h3>
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+
+    <h3>Hilfen:</h3>
+    <details>
+    <summary>Hilfe:</summary>
+    <p>Die Anführungszeichen müssen ausgeglichen sein. Versuche daher mal den Vorname <b>Test" OR "1"="1</b>. <br> Kannst du dir das Verhalten erklären?</p>
+    </details>
+
+    {% if daten is not none %}
+        <h2>Suchergebnisse</h2>
+        {% if daten %}
+            <table border="1" cellpadding="5">
+                <tr>
+                    <th>ID</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Adresse</th>
+                </tr>
+                {% for kunde in daten %}
+                <tr>
+                    <td>{{ kunde[0] }}</td>
+                    <td>{{ kunde[1] }}</td>
+                    <td>{{ kunde[2] }}</td>
+                    <td>{{ kunde[3] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>Keine Ergebnisse gefunden.</p>
+        {% endif %}
+    {% endif %}
+    <a href="/">Zurück</a>
+</body>
+</html>

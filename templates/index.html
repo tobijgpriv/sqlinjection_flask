@@ -2,57 +2,23 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Kundensuche</title>
+    <title>SQL Injection</title>
 </head>
 <body>
-    <h1>Kundensuche</h1>
+    <h1>SQL Injection</h1>
 
-    <form method="post">
-        <label for="vorname">Vorname:</label>
-        <input type="text" name="vorname"><br><br>
+    Diese Webanwendung ist erstellt worden um einfache SQL Injection Angriffe zu erlernen und durchzuführen. Dafür wurden verschiedene Level erstellt, die einerseits eine Suche in einer Kundendatenbank und andererseits einen Login simulieren. Die Anwendung ist sehr einfach gehalten und beinhaltet nur die grundlegenden Angriffe um das Verständnis für SQL-Injection Angriffe zu schulen. Um tiefer in die verschiedenen Angriffsmöglichkeiten mittels SQL-Injection einzusteigen wird auf die kostenlose <a href ="https://portswigger.net/web-security"> Web Security Academy</a> von Portswigger verwiesen.
 
-        <label for="nachname">Nachname:</label>
-        <input type="text" name="nachname"><br><br>
 
-        <button type="submit">Suchen</button>
-    </form>
+    Die folgenden Seiten stehen zur Verfügung:
+    <ol>
+        <li><a href="/search">Suche in einer Kundendatenbank (verwundbar)</a></li>
+        <li><a href="/sicher">Suche in einer Kundendatenbank (sicher)</a></li>
+        <li><a href="/join">Suche in einer Kundendatenbank, Angriffe mit JOIN (verwundbar)</a></li>
+        <li><a href="/login">Login (verwundbar)</a></li>
+        <li><a href="/sqlmap">Zusatzaufgabe: SQLMap</a></li>
+    </ol>
 
-    {% if fehlermeldung %}
-        <p style="color:red;">{{ fehlermeldung }}</p>
-    {% endif %}
 
-    {% if query is not none %}
-        <p style="color:blue;">{{ query }}</p>
-    {% endif %}
-
-    {% if daten is not none %}
-        <h2>Suchergebnisse</h2>
-        {% if daten %}
-         {% for kunde in daten %}
-         {{ kunde }}
-         <br>
-         {% endfor %}
-         {% endif %}
-        {% if daten %}
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Adresse</th>
-                </tr>
-                {% for kunde in daten %}
-                <tr>
-                    <td>{{ kunde[0] }}</td>
-                    <td>{{ kunde[1] }}</td>
-                    <td>{{ kunde[2] }}</td>
-                    <td>{{ kunde[3] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>Keine Ergebnisse gefunden.</p>
-        {% endif %}
-    {% endif %}
 </body>
 </html>

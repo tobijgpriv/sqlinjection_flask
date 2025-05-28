@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundensuche</title>
+</head>
+<body>
+    <h1> Aufgabe:</h1>
+    Diese Seite ist identisch zur Kundensuche. Im Hintergrund wurde die Abfrage jedoch abgesichert. 
+
+
+<h3>Ziel:</h3>
+    Das Ziel ist es hier die auf den anderen Seiten erfolgreichen Angriffe erneut durchzuführen. Vergleiche danach den Sourcecode der Anwendung (siehe unten).
+    <h1>Kundensuche</h1>
+
+    <form method="post">
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname"><br><br>
+
+        <label for="nachname">Nachname:</label>
+        <input type="text" name="nachname"><br><br>
+
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if fehlermeldung %}
+        <p style="color:red;">{{ fehlermeldung }}</p>
+    {% endif %}
+
+    {% if query is not none %}
+        <h3>Tatsächlich ausgeführte SQL Query.</h3>
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+
+    <h2>Sicheres Programmieren:</h2>
+    <details>
+    <summary>Sourcecode (unsicher):</summary>
+    <pre>       
+        conn = get_db_connection()
+        if conn is None:
+            fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
+        else:
+            try:
+                cursor = conn.cursor()
+                query = f"""
+                    SELECT *
+                    FROM Kunden
+                    WHERE vorname = "{vorname}" OR nachname = "{nachname}"
+                """
+                cursor.execute(query)
+                daten = cursor.fetchall()
+            except Error as e:
+                fehlermeldung = f"Fehler bei der Abfrage: {e}"
+            finally:
+                cursor.close()
+                conn.close()</pre>
+    </details>
+    <details>
+    <summary>Sourcecode (sicher):</summary>
+    <pre>       
+        conn = get_db_connection()
+        if conn is None:
+            fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
+        else:
+            try:
+                cursor = conn.cursor()
+                query = """
+                    SELECT *
+                    FROM Kunden
+                    WHERE vorname = %s OR nachname = %s
+                """
+                cursor.execute(query, (vorname,nachname))
+                daten = cursor.fetchall()
+                print(daten)
+            except Error as e:
+                fehlermeldung = f"Fehler bei der Abfrage: {e}"
+            finally:
+                cursor.close()
+                conn.close()</pre>
+    </details>
+     <details>
+    <summary>Die Lösung <b>Prepared Statements</b></summary>
+    SQL Abfragen können über <b>prepared Statements</b> abgesichert werden. Dabei wird die SQL Abfrage nicht einfach zu einem String zusammengefügt und an die Datenbank gesendet. Wird die SQL Query einfach zusammengefügt, kann ein Angreifer immer auch auf Teile der SQL Abfrage zugreifen auf die er keinen Zugriff haben sollte. 
+    <br> <br>
+    Bei prepared Statements wird die SQL Abfrage zuerst vorbereitet und danach die Nutzereingabe eingefügt, daher kann das Programm zwischen eigentlichem SQL Code und vom Nutzer eingefügtem SQL Code unterschieden werden (siehe sicherer Code). Das Beispiel oben ist in Python geschrieben. Die anderen Sprachen haben aber alle ähnliche Funktionen um den sicheren Zugriff auf die Datenbank zu erlauben!
+    </details>
+
+    {% if daten is not none %}
+        <h2>Suchergebnisse</h2>
+        {% if daten %}
+            <table border="1" cellpadding="5">
+                <tr>
+                    <th>ID</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Adresse</th>
+                </tr>
+                {% for kunde in daten %}
+                <tr>
+                    <td>{{ kunde[0] }}</td>
+                    <td>{{ kunde[1] }}</td>
+                    <td>{{ kunde[2] }}</td>
+                    <td>{{ kunde[3] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>Keine Ergebnisse gefunden.</p>
+        {% endif %}
+    {% endif %}
+    <a href="/">Zurück</a>
+</body>
+</html>

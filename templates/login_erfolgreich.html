@@ -2,11 +2,12 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Herzlich Willkommen zum Adminportal</title>
+    <title>Herzlich Willkommen zum Adminportal </title>
 </head>
 <body>
-    <h1>Herzlich Willkommen zum Adminportal</h1>
+    <h1>Hallo {{ daten[0] }}, herzlich Willkommen zum Adminportal </h1>
     {% if query %}
+    <h3>Tatsächlich ausgeführte SQL Query:</h3>
         <p style="color:blue;">{{ query }}</p>
     {% endif %}
 

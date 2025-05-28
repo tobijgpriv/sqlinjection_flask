@@ -21,8 +21,17 @@ def get_db_connection():
         print(f"Datenbankfehler: {e}")
         return None
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/sqlmap')
+def sqlmap():
+    return render_template('sqlmap.html')
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
     daten = None
     fehlermeldung = None
     query = None
@@ -50,7 +59,7 @@ def index():
                 cursor.close()
                 conn.close()
 
-    return render_template('index.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
+    return render_template('search.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
 
 @app.route('/join', methods=['GET', 'POST'])
 def join():
@@ -82,7 +91,7 @@ def join():
                 cursor.close()
                 conn.close()
 
-    return render_template('index_join.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
+    return render_template('join.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -113,9 +122,10 @@ def login():
             finally:
                 cursor.close()
                 conn.close()
-            #app.logger.error(daten)
-            if daten!=None:
-                return render_template('login_erfolgreich.html', query=query)
+            
+            if daten!=None and daten != []:
+                app.logger.error(daten)
+                return render_template('login_erfolgreich.html', query=query, daten=daten[0])
                 #print("Login erfolgreich")
             fehlermeldung = "Login fehlgeschlagen! Bitte versuche es erneut!"
             #app.logger.error("Login fehlgeschlagen")
@@ -154,7 +164,7 @@ def index_sicher():
                 cursor.close()
                 conn.close()
 
-    return render_template('index.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
+    return render_template('search_sicher.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
 
 if __name__ == "__main__":
     #app.run(debug=True)

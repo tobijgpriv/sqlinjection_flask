@@ -5,6 +5,15 @@
     <title>Kundenlogin</title>
 </head>
 <body>
+    <h1> Aufgabe:</h1>
+    Auf dieser Seite kann man sich zu einem Kundenportal anmelden. Man gibt Vorname und Passwort ein und falls die Eingaben richtig sind, ist der Login erfolgreich. Die im Hintergrund verwendete SQL Query ist:
+    <p style="color:blue;">SELECT vorname,passwort FROM Kunden
+                    JOIN Kunden_Passwoerter ON Kunden.ID = Kunden_Passwoerter.KundenID
+                    WHERE vorname = "{vorname}" AND passwort = "{passwort}</p>
+    Für {vorname} und {passwort} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt. Werden 1 oder mehr Datensätze zurückgegeben, so wird der Login als erfolgreich angesehen.
+
+    <h3>Ziel:</h3>
+    Das Ziel ist es sich als Benutzer mit dem Vornamen <i>Admin</i> einzuloggen, ohne das Passwort zu verwenden.
     <h1>Kundenlogin</h1>
 
     <form method="post">
@@ -17,13 +26,37 @@
         <button type="submit">Login</button>
     </form>
 
+
+
     {% if fehlermeldung %}
         <p style="color:red;">{{ fehlermeldung }}</p>
     {% endif %}
 
     {% if query is not none %}
+    <h3>Tatsächlich ausgeführte SQL Query:</h3>
         <p style="color:blue;">{{ query }}</p>
     {% endif %}
-
+    <h3>Hilfen:</h3>
+    <details>
+    <summary>Hilfe 1:</summary>
+    <p>Das Ziel ist es also die SQL Query so anzupassen, dass auf jeden Fall ein oder mehrere Ergebnisse zurückgeliefert werden, obwohl das Passwort nicht stimt.</p>
+    </details>
+    <details>
+    <summary>Hilfe 2:</summary>
+    <p>Das kann zum Beispiel mit einem <b>OR 1=1</b> mit passenden Anführungszeichen erreicht werden.</p>
+    </details>
+    <details>
+    <summary>Hilfe 2 Alternative:</summary>
+    <p>Zwei Bindestriche -- sind das Kommentarzeichen in SQL, das heißt ab dem Kommentarzeichen wird das SQL Statement nicht mehr beachtet. Vor und nach dem Kommentarzeichen muss ein Leerzeichen sein!<br> Kannst du so die Passwortabfrage abschalten?</p>
+    </details>
+    <details>
+    <summary>Hilfe 3 Alternative:</summary>
+    <p>Das Kommentarzeichen muss außerhalb der Anführungszeichen stehen und auch danach müssen die Anführungszeichen passen.</p>
+    </details>
+    <details>
+    <summary>Zusatzaufgabe:</summary>
+    <p>Kannst du dich auch ohne Passwort als Michaela Krause anmelden?</p>
+    </details>
+    <a href="/">Zurück</a>
 </body>
 </html>
