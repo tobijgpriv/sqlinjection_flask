@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundensuche</title>
+</head>
+<body>
+    <h1>Kundensuche</h1>
+
+    <form method="post">
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname"><br><br>
+
+        <label for="nachname">Nachname:</label>
+        <input type="text" name="nachname"><br><br>
+
+        <label for="Tabelle">Tabelle:</label>
+        <input type="text" name="tabelle" value="Kunden"><br><br>
+
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if fehlermeldung %}
+        <p style="color:red;">{{ fehlermeldung }}</p>
+    {% endif %}
+
+    {% if query is not none %}
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+
+    {% if daten is not none %}
+        <h2>Suchergebnisse</h2>
+        {% if daten %}
+         {% for kunde in daten %}
+         {{ kunde }}
+         <br>
+         {% endfor %}        
+        {% else %}
+            <p>Keine Ergebnisse gefunden.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

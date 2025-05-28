@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundenlogin</title>
+</head>
+<body>
+    <h1>Kundenlogin</h1>
+
+    <form method="post">
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname"><br><br>
+
+        <label for="passwort">Passwort:</label>
+        <input type="text" name="passwort"><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    {% if fehlermeldung %}
+        <p style="color:red;">{{ fehlermeldung }}</p>
+    {% endif %}
+
+    {% if query is not none %}
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+
+</body>
+</html>

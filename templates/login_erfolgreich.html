@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Herzlich Willkommen zum Adminportal</title>
+</head>
+<body>
+    <h1>Herzlich Willkommen zum Adminportal</h1>
+    {% if query %}
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+
+    <br>
+    <a href="/login">Abmelden</a>
+</body>
+</html>

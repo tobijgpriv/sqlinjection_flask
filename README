@@ -1,0 +1,12 @@
+#SQL Injection Plattform 
+##Installation
+1. Install Flask and Faker (e.g. pip install flask faker)
+2. Install a MySQL/MariaDB database
+3. Random Data can be generated using the scripts kundendatenbank_erstellen.py or kundendatenbank_2tabellen.py
+4. Change the Database Credentials in sqlinjection.py to valid credentials of your MySQL/MariaDB database
+
+##Usage
+1. Install Flask and Faker (e.g. pip install flask faker)
+2. Change the Database Credentials to valid credentials of your MySQL/MariaDB database
+3. Start the script using python3 sqlinjection.py
+4. The application is served on port 5000/TCP.
