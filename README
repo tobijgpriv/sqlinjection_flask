@@ -1,6 +1,7 @@
 # SQL Injection Plattform 
 
 ## Installation
+
 1. Install Flask and Faker (e.g. pip install flask faker)
 2. Install a MySQL/MariaDB database
 3. Random Data can be generated using the scripts kundendatenbank_erstellen.py or kundendatenbank_2tabellen.py
