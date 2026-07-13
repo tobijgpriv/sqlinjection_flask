@@ -8,8 +8,8 @@ app = Flask(__name__)
 DB_CONFIG = {
     'host': '127.0.0.1',      # IP oder Hostname des MySQL/MariaDB-Servers
     'port': 3306,
-    'user': 'student',
-    'password': 'Steinbeis',
+    'user': 'sqli',
+    'password': 'sqliSuperSicher',
     'database': 'SQLInjection'
 }
 
@@ -29,6 +29,38 @@ def index():
 @app.route('/sqlmap')
 def sqlmap():
     return render_template('sqlmap.html')
+
+@app.route('/kommentar', methods=['GET', 'POST'])
+def kommentar():
+    daten = None
+    fehlermeldung = None
+    query = None
+
+    if request.method == 'POST':
+        vorname = request.form['vorname']
+        nachname = request.form['nachname']
+
+        conn = get_db_connection()
+        if conn is None:
+            fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
+        else:
+            try:
+                cursor = conn.cursor()
+                query = f"""
+                    SELECT *
+                    FROM Kunden
+                    WHERE (vorname = "{vorname}" OR nachname = "{nachname}") AND vorname != "Admin"
+                """
+                cursor.execute(query)
+                daten = cursor.fetchall()
+            except Error as e:
+                fehlermeldung = f"Fehler bei der Abfrage: {e}"
+            finally:
+                cursor.close()
+                conn.close()
+
+    return render_template('kommentar.html', daten=daten, fehlermeldung=fehlermeldung,query=query)
+
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():

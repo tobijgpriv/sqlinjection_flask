@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundensuche</title>
+</head>
+<body>
+    <h1> Aufgabe:</h1>
+    Auf dieser Seite kann nach Kunden gesucht werden, die <b>nicht Admin</b> sind. Die im Hintergrund verwendete SQL Query ist:
+    <p style="color:blue;">SELECT * FROM Kunden (WHERE vorname = "{vorname}" OR nachname = "{nachname}") AND vorname != "Admin"</p>
+    Für {vorname} und {nachname} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt.
+
+
+    <p style="border: 1px solid black;">
+         <details>
+    <summary><b>SQL-Injection Kommentar</b></summary>
+    Bei einer SQL-Injection ist das Ziel mit den Eingabemöglichkeiten (wie z.B: hier Vorname und Nachname) die SQL Query so zu verändern, dass zum Beispiel mehr Informationen ausgegeben werden als vorgesehen. Mit dem Kommentarzeichen (--) kann man den Rest eines SQL Befehls abschneiden. Dann können zum Beispiel Einschränkungen umgangen werden.<br>
+    <br>
+    
+</details></p>
+
+<h3>Ziel:</h3>
+    Das Ziel ist es hier die Daten des Accounts mit dem Vornamen "Admin" auszulesen.
+    <h1>Kundensuche</h1>
+
+    <form method="post">
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname" value="Michaela"><br><br>
+
+        <label for="nachname">Nachname:</label>
+        <input type="text" name="nachname"><br><br>
+
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if fehlermeldung %}
+        <p style="color:red;">{{ fehlermeldung }}</p>
+    {% endif %}
+
+    {% if query is not none %}
+        <h3>Tatsächlich ausgeführte SQL Query.</h3>
+        <p style="color:blue;">{{ query }}</p>
+    {% endif %}
+
+    <h3>Hilfen:</h3>
+    <details>
+    <summary>Hilfe:</summary>
+    <p>Du kannst das Kommentarzeichen (--) verwenden. Alles nach diesem Kommentarzeichen, wird nicht mehr ausgeführt. Klammern und Anführungszeichen müssen jedoch immernoch stimmen! </p>
+    </details>
+    <details>
+    <summary>Hilfe 2:</summary>
+    <p>Das Kommentarzeichen muss außerhalb der Anführungszeichen und der Klammer stehen und auch danach müssen die Anführungszeichen passen.</p>
+    </details>
+    <details>
+    <summary>Lösung:</summary>
+    <p>Vorname muss sein: Admin") -- "</p>
+    </details>
+
+    {% if daten is not none %}
+        <h2>Suchergebnisse</h2>
+        {% if daten %}
+            <table border="1" cellpadding="5">
+                <tr>
+                    <th>ID</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Adresse</th>
+                </tr>
+                {% for kunde in daten %}
+                <tr>
+                    <td>{{ kunde[0] }}</td>
+                    <td>{{ kunde[1] }}</td>
+                    <td>{{ kunde[2] }}</td>
+                    <td>{{ kunde[3] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>Keine Ergebnisse gefunden.</p>
+        {% endif %}
+    {% endif %}
+    <a href="/">Zurück</a>
+</body>
+</html>
