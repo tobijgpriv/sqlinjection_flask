@@ -6,10 +6,10 @@ faker.Faker.seed(0)
 random.seed(0)
 
 # Kunden-Datensätze: ID, Vorname, Nachname, Adresse
-kunden = [(1, 'Admin', 'User', 'Hauptstraße 1, 12345 Musterstadt')]
+kunden = [(1, 'Admin', 'User', 'Hauptstraße 1, 12345 Musterstadt'), (2,'Claudia','Höfig', 'Lange Straße 123, 71242 Städtchen')]
 
 # Passwörter separat mit KundenID
-passwoerter = [(1, 'AdminPass123')]
+passwoerter = [(1, 'AdminPass123'), (2,"Sommer2026!")]
 
 # Generiere weitere 99 Kunden
 for i in range(2, 101):
