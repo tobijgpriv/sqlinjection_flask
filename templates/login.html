@@ -2,61 +2,97 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Kundenlogin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Level 5 · Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1> Aufgabe:</h1>
-    Auf dieser Seite kann man sich zu einem Kundenportal anmelden. Man gibt Vorname und Passwort ein und falls die Eingaben richtig sind, ist der Login erfolgreich. Die im Hintergrund verwendete SQL Query ist:
-    <p style="color:blue;">SELECT vorname,passwort FROM Kunden
-                    JOIN Kunden_Passwoerter ON Kunden.ID = Kunden_Passwoerter.KundenID
-                    WHERE vorname = "{vorname}" AND passwort = "{passwort}</p>
-    Für {vorname} und {passwort} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt. Werden 1 oder mehr Datensätze zurückgegeben, so wird der Login als erfolgreich angesehen.
+    <header class="site-header">
+        <div class="page">
+            <h1>🔑 Kundenlogin <span class="badge badge-danger">verwundbar</span></h1>
+            <p class="subtitle">Level 5 · Anmeldung ohne gültiges Passwort</p>
+        </div>
+    </header>
 
-    <h3>Ziel:</h3>
-    Das Ziel ist es sich als Benutzer mit dem Vornamen <i>Admin</i> einzuloggen, ohne das Passwort zu verwenden.
-    <h1>Kundenlogin</h1>
+    <div class="page">
+        <div class="card">
+            <h2>Aufgabe</h2>
+            <p>
+                Auf dieser Seite kannst du dich für ein Kundenportal anmelden. Du gibst Vorname und Passwort ein;
+                stimmen beide Werte überein, ist der Login erfolgreich. Im Hintergrund wird folgende Abfrage
+                verwendet:
+            </p>
+            <div class="query-preview">SELECT vorname, passwort FROM Kunden
+JOIN Kunden_Passwoerter ON Kunden.ID = Kunden_Passwoerter.KundenID
+WHERE vorname = "{vorname}" AND passwort = "{passwort}"</div>
+            <p>
+                Die Platzhalter <code>{vorname}</code> und <code>{passwort}</code> werden
+                <strong>ungeprüft</strong> aus den Eingabefeldern übernommen. Liefert die Abfrage einen oder
+                mehrere Datensätze zurück, gilt der Login als erfolgreich.
+            </p>
+        </div>
 
-    <form method="post">
-        <label for="vorname">Vorname:</label>
-        <input type="text" name="vorname"><br><br>
+        <div class="card">
+            <h2>Ziel dieses Levels</h2>
+            <p>Melde dich als Nutzer mit dem Vornamen <strong>Admin</strong> an — ohne dessen Passwort zu kennen.</p>
 
-        <label for="passwort">Passwort:</label>
-        <input type="text" name="passwort"><br><br>
+            <form method="post">
+                <div class="form-grid">
+                    <div>
+                        <label for="vorname">Vorname</label>
+                        <input type="text" id="vorname" name="vorname">
+                    </div>
+                    <div>
+                        <label for="passwort">Passwort</label>
+                        <input type="text" id="passwort" name="passwort">
+                    </div>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
 
-        <button type="submit">Login</button>
-    </form>
+            {% if fehlermeldung %}
+                <div class="message message-error">{{ fehlermeldung }}</div>
+            {% endif %}
 
+            {% if query is not none %}
+                <h3>So sah die tatsächlich ausgeführte Abfrage aus:</h3>
+                <div class="message message-query"><p>{{ query }}</p></div>
+            {% endif %}
 
+            <h3>Brauchst du einen Tipp?</h3>
+            <details>
+                <summary>Hilfe 1</summary>
+                <p>
+                    Dein Ziel ist es, die Abfrage so zu verändern, dass garantiert ein Ergebnis zurückgegeben wird
+                    — auch wenn das Passwort gar nicht stimmt.
+                </p>
+            </details>
+            <details>
+                <summary>Hilfe 2</summary>
+                <p>Das lässt sich zum Beispiel mit einem <code>OR 1=1</code> und passenden Anführungszeichen erreichen.</p>
+            </details>
+            <details>
+                <summary>Hilfe 2 (Alternative)</summary>
+                <p>
+                    Zwei Bindestriche <code>--</code> sind das Kommentarzeichen in SQL: Ab dieser Stelle wird der
+                    Rest des Befehls nicht mehr beachtet. Vor und nach dem Kommentarzeichen muss jeweils ein
+                    Leerzeichen stehen. Lässt sich damit die Passwortabfrage einfach „abschalten“?
+                </p>
+            </details>
+            <details>
+                <summary>Hilfe 3 (Alternative)</summary>
+                <p>
+                    Das Kommentarzeichen muss außerhalb der Anführungszeichen stehen, und auch davor müssen die
+                    Anführungszeichen bereits korrekt geschlossen sein.
+                </p>
+            </details>
+            <details>
+                <summary>Zusatzaufgabe</summary>
+                <p>Kannst du dich auf dieselbe Weise auch ohne Passwort als Michaela Krause anmelden?</p>
+            </details>
+        </div>
 
-    {% if fehlermeldung %}
-        <p style="color:red;">{{ fehlermeldung }}</p>
-    {% endif %}
-
-    {% if query is not none %}
-    <h3>Tatsächlich ausgeführte SQL Query:</h3>
-        <p style="color:blue;">{{ query }}</p>
-    {% endif %}
-    <h3>Hilfen:</h3>
-    <details>
-    <summary>Hilfe 1:</summary>
-    <p>Das Ziel ist es also die SQL Query so anzupassen, dass auf jeden Fall ein oder mehrere Ergebnisse zurückgeliefert werden, obwohl das Passwort nicht stimt.</p>
-    </details>
-    <details>
-    <summary>Hilfe 2:</summary>
-    <p>Das kann zum Beispiel mit einem <b>OR 1=1</b> mit passenden Anführungszeichen erreicht werden.</p>
-    </details>
-    <details>
-    <summary>Hilfe 2 Alternative:</summary>
-    <p>Zwei Bindestriche -- sind das Kommentarzeichen in SQL, das heißt ab dem Kommentarzeichen wird das SQL Statement nicht mehr beachtet. Vor und nach dem Kommentarzeichen muss ein Leerzeichen sein!<br> Kannst du so die Passwortabfrage abschalten?</p>
-    </details>
-    <details>
-    <summary>Hilfe 3 Alternative:</summary>
-    <p>Das Kommentarzeichen muss außerhalb der Anführungszeichen stehen und auch danach müssen die Anführungszeichen passen.</p>
-    </details>
-    <details>
-    <summary>Zusatzaufgabe:</summary>
-    <p>Kannst du dich auch ohne Passwort als Michaela Krause anmelden?</p>
-    </details>
-    <a href="/">Zurück</a>
+        <a class="back-link" href="/">← Zurück zur Übersicht</a>
+    </div>
 </body>
 </html>

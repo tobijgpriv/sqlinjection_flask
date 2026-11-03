@@ -1,0 +1,404 @@
+/* =========================================================
+   SQL-Injection Lernplattform – gemeinsames Stylesheet
+   ========================================================= */
+
+:root {
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-border: #dfe3ec;
+  --color-text: #232735;
+  --color-text-soft: #5b6273;
+  --color-primary: #3453d1;
+  --color-primary-dark: #26399e;
+  --color-primary-soft: #eaeefb;
+  --color-danger: #c62d42;
+  --color-danger-bg: #fdecee;
+  --color-danger-border: #f3c3cb;
+  --color-success: #1f8a52;
+  --color-success-bg: #e8f7ef;
+  --color-success-border: #bfe8d2;
+  --color-warning: #a9680a;
+  --color-warning-bg: #fff4e2;
+  --color-warning-border: #f3dcab;
+  --color-code-bg: #1e2233;
+  --color-code-text: #e3e6f0;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-card: 0 2px 10px rgba(35, 39, 53, 0.06), 0 1px 2px rgba(35, 39, 53, 0.08);
+  --font-sans: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "Fira Code", Consolas, "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+}
+
+/* ---------- Kopfbereich ---------- */
+
+.site-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  padding: 28px 20px;
+  margin-bottom: 32px;
+}
+
+.site-header .page {
+  padding-bottom: 0;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-header .subtitle {
+  margin: 6px 0 0;
+  color: #dbe2fb;
+  font-size: 0.98rem;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.badge-danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-border);
+}
+
+.badge-success {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid var(--color-success-border);
+}
+
+.badge-neutral {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Karten / Abschnitte ---------- */
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+
+.card h2, .card h3 {
+  margin-top: 0;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+h1, h2, h3 {
+  color: var(--color-text);
+  font-weight: 650;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 1.05rem;
+}
+
+p {
+  margin: 0 0 12px;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* ---------- Infoboxen ---------- */
+
+.info-box {
+  background: var(--color-primary-soft);
+  border: 1px solid #c8d2f5;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin: 14px 0;
+}
+
+.warning-box {
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: #6b4406;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin: 14px 0;
+}
+
+.warning-box strong {
+  color: var(--color-warning);
+}
+
+/* ---------- Formulare ---------- */
+
+form {
+  margin: 18px 0;
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+  max-width: 420px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+  color: var(--color-text-soft);
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  background: #fbfcff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+button[type="submit"] {
+  justify-self: start;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 11px 22px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button[type="submit"]:hover {
+  background: var(--color-primary-dark);
+}
+
+/* ---------- Meldungen ---------- */
+
+.message {
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-weight: 500;
+}
+
+.message-error {
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+.message-query {
+  background: #eef1fb;
+  border: 1px solid #c8d2f5;
+}
+
+.message-query p {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--color-primary-dark);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* ---------- Code ---------- */
+
+pre, code {
+  font-family: var(--font-mono);
+}
+
+pre {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.query-preview {
+  background: var(--color-code-bg);
+  color: #aee0ff;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  overflow-x: auto;
+  margin: 10px 0 18px;
+}
+
+/* ---------- Aufklappbare Hilfen ---------- */
+
+details {
+  background: #fafbff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  margin: 10px 0;
+}
+
+details + details {
+  margin-top: 10px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+details p {
+  margin: 10px 0 2px;
+}
+
+/* ---------- Tabellen ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.94rem;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-weight: 650;
+}
+
+tr:hover td {
+  background: #f8f9ff;
+}
+
+/* ---------- Startseite / Navigation ---------- */
+
+.level-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.level-list li {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.level-list li:hover {
+  border-color: var(--color-primary);
+  transform: translateX(2px);
+}
+
+.level-list a {
+  font-weight: 650;
+  font-size: 1.02rem;
+}
+
+.level-list .level-desc {
+  display: block;
+  color: var(--color-text-soft);
+  font-size: 0.88rem;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+ol.steps {
+  padding-left: 22px;
+}
+
+ol.steps li {
+  margin-bottom: 14px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  .card {
+    padding: 18px 18px;
+  }
+  .site-header h1 {
+    font-size: 1.35rem;
+  }
+}

@@ -2,24 +2,71 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>SQL Injection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQL-Injection Lernplattform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>SQL Injection</h1>
+    <header class="site-header">
+        <div class="page">
+            <h1>🛡️ SQL-Injection Lernplattform</h1>
+            <p class="subtitle">Übungsumgebung, um SQL-Injection-Angriffe sicher und in Ruhe auszuprobieren</p>
+        </div>
+    </header>
 
-    Diese Webanwendung ist erstellt worden um einfache SQL Injection Angriffe zu erlernen und durchzuführen. Dafür wurden verschiedene Level erstellt, die einerseits eine Suche in einer Kundendatenbank und andererseits einen Login simulieren. Die Anwendung ist sehr einfach gehalten und beinhaltet nur die grundlegenden Angriffe um das Verständnis für SQL-Injection Angriffe zu schulen. Um tiefer in die verschiedenen Angriffsmöglichkeiten mittels SQL-Injection einzusteigen wird auf die kostenlose <a href ="https://portswigger.net/web-security"> Web Security Academy</a> von Portswigger verwiesen.
+    <div class="page">
+        <div class="card">
+            <h2>Worum geht es hier?</h2>
+            <p>
+                Diese Webseite ist eine Übungsumgebung. Sie hilft dabei zu verstehen, wie der Angriff
+                <strong>SQL-Injection</strong> funktioniert und wie man sich dagegen schützt. SQL-Injection ist
+                eine der bekanntesten Schwachstellen in Webanwendungen: Wenn Eingaben von Nutzerinnen und Nutzern
+                nicht richtig geprüft werden, kann jemand über ein einfaches Eingabefeld auf Daten zugreifen,
+                die eigentlich geschützt sein sollten.
+            </p>
+            <p>
+                Dafür gibt es mehrere Übungs-Level. In jedem Level gibt es entweder eine Suchfunktion für eine
+                Kundendatenbank oder einen Login-Bereich. Die Eingaben werden dort absichtlich ungeprüft an die
+                Datenbank weitergegeben, damit du den Angriff selbst ausprobieren kannst. Jedes Level erklärt die
+                Aufgabe, zeigt die verwendete Datenbankabfrage und bietet Hilfestellungen, falls du nicht
+                weiterkommst.
+            </p>
+            <div class="info-box">
+                Du möchtest tiefer einsteigen? Die kostenlose
+                <a href="https://portswigger.net/web-security" target="_blank" rel="noopener">Web Security Academy</a>
+                von Portswigger bietet viele weitere Übungen rund um Webanwendungssicherheit.
+            </div>
+        </div>
 
-
-    Die folgenden Seiten stehen zur Verfügung:
-    <ol>
-        <li><a href="/kommentar">Suche in einer Kundendatenbank (verwundbar) - Angriff mit dem Kommentarzeichen</a></li>
-        <li><a href="/search">Suche in einer Kundendatenbank (verwundbar)</a></li>
-        <li><a href="/sicher">Suche in einer Kundendatenbank (sicher)</a></li>
-        <li><a href="/join">Suche in einer Kundendatenbank, Angriffe mit JOIN (verwundbar)</a></li>
-        <li><a href="/login">Login (verwundbar)</a></li>
-        <li><a href="/sqlmap">Zusatzaufgabe: SQLMap</a></li>
-    </ol>
-
-
+        <div class="card">
+            <h2>Verfügbare Übungen</h2>
+            <ul class="level-list">
+                <li>
+                    <a href="/kommentar">Level 1 · Kundensuche mit Kommentarzeichen</a>
+                    <span class="level-desc">Verwundbar — Lerne, wie man mit dem SQL-Kommentarzeichen (--) Teile einer Abfrage ausblendet.</span>
+                </li>
+                <li>
+                    <a href="/search">Level 2 · Kundensuche</a>
+                    <span class="level-desc">Verwundbar — Der klassische Einstieg: alle Kundendaten über die Suche auslesen.</span>
+                </li>
+                <li>
+                    <a href="/sicher">Level 3 · Kundensuche (abgesichert)</a>
+                    <span class="level-desc">Sicher — Dieselbe Suche, aber mit abgesicherter Datenbankabfrage. Vergleiche den Unterschied.</span>
+                </li>
+                <li>
+                    <a href="/join">Level 4 · Kundensuche mit JOIN-Angriff</a>
+                    <span class="level-desc">Verwundbar — Nutze einen JOIN, um sogar Passwörter aus einer anderen Tabelle auszulesen.</span>
+                </li>
+                <li>
+                    <a href="/login">Level 5 · Login-Bereich</a>
+                    <span class="level-desc">Verwundbar — Logge dich ohne gültiges Passwort als Administrator ein.</span>
+                </li>
+                <li>
+                    <a href="/sqlmap">Zusatzaufgabe · Automatisiert mit SQLMap</a>
+                    <span class="level-desc">Lerne das Open-Source-Werkzeug SQLMap kennen, das SQL-Injection-Angriffe automatisiert.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

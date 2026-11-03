@@ -2,75 +2,114 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Kundensuche</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Level 2 · Kundensuche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1> Aufgabe:</h1>
-    Auf dieser Seite kann nach Kunden mit dem Namen gesucht werden. Die im Hintergrund verwendete SQL Query ist:
-    <p style="color:blue;">SELECT * FROM Kunden WHERE vorname = "{vorname}" OR nachname = "{nachname}"</p>
-    Für {vorname} und {nachname} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt.
+    <header class="site-header">
+        <div class="page">
+            <h1>🔍 Kundensuche <span class="badge badge-danger">verwundbar</span></h1>
+            <p class="subtitle">Level 2 · Grundlagen der SQL-Injection</p>
+        </div>
+    </header>
 
+    <div class="page">
+        <div class="card">
+            <h2>Aufgabe</h2>
+            <p>
+                Auf dieser Seite kannst du nach Kundinnen und Kunden anhand ihres Namens suchen. Im Hintergrund
+                wird deine Eingabe direkt in diese Datenbankabfrage eingesetzt:
+            </p>
+            <div class="query-preview">SELECT * FROM Kunden WHERE vorname = "{vorname}" OR nachname = "{nachname}"</div>
+            <p>
+                Die Platzhalter <code>{vorname}</code> und <code>{nachname}</code> werden <strong>ungeprüft</strong>
+                durch das ersetzt, was du in die Felder unten eingibst. Das ist das Kernproblem: Die Anwendung
+                vertraut deiner Eingabe blind und baut sie wörtlich in den SQL-Befehl ein.
+            </p>
 
-    <p style="border: 1px solid black;">
-         <details>
-    <summary><b>SQL-Injection</b></summary>
-    Bei einer SQL-Injection ist das Ziel mit den Eingabemöglichkeiten (wie z.B: hier Vorname und Nachname) die SQL Query so zu verändern, dass zum Beispiel mehr Informationen ausgegeben werden als vorgesehen. Damit kann man oftmals auf die komplette Datenbank zugreifen.<br>
-    <b>Beispiel:</b> <br>
-    Es wird neben dem Namen noch ein "OR 1=1" hinzugefügt. Die Bedingung 1=1 ist immer wahr, in Verbindung mit OR müssten dann alle Einträge der Datenbank angezeigt werden. Aber Achtung! Es funktioniert nur, wenn die Anführungszeichen so eingegeben werden, dass kein Fehler entsteht und das OR 1=1 nicht in den Anführungszeichen steht.
-</details></p>
+            <details>
+                <summary>Was ist eigentlich eine SQL-Injection?</summary>
+                <p>
+                    Bei einer SQL-Injection nutzt man Eingabefelder (hier Vorname und Nachname), um die eigentliche
+                    Datenbankabfrage zu verändern. Ziel ist es, mehr Daten zu bekommen, als eigentlich vorgesehen
+                    ist — im schlimmsten Fall den kompletten Inhalt der Datenbank.
+                </p>
+                <p>
+                    <strong>Beispiel:</strong> Man ergänzt die Eingabe um ein <code>OR 1=1</code>. Die Bedingung
+                    <code>1=1</code> ist immer wahr. In Verbindung mit <code>OR</code> wird dadurch die gesamte
+                    Bedingung immer wahr — die Datenbank gibt dann alle Einträge zurück, nicht nur die gesuchten.
+                    Wichtig dabei: Die Anführungszeichen müssen am Ende wieder zusammenpassen, sonst meldet die
+                    Datenbank einen Fehler und die Abfrage schlägt fehl.
+                </p>
+            </details>
+        </div>
 
-<h3>Ziel:</h3>
-    Das Ziel ist es hier alle Kundendaten auszulesen.
-    <h1>Kundensuche</h1>
+        <div class="card">
+            <h2>Ziel dieses Levels</h2>
+            <p>Finde eine Eingabe, mit der <strong>alle</strong> Kundendaten angezeigt werden — nicht nur ein einzelner Treffer.</p>
 
-    <form method="post">
-        <label for="vorname">Vorname:</label>
-        <input type="text" name="vorname"><br><br>
+            <form method="post">
+                <div class="form-grid">
+                    <div>
+                        <label for="vorname">Vorname</label>
+                        <input type="text" id="vorname" name="vorname">
+                    </div>
+                    <div>
+                        <label for="nachname">Nachname</label>
+                        <input type="text" id="nachname" name="nachname">
+                    </div>
+                    <button type="submit">Suchen</button>
+                </div>
+            </form>
 
-        <label for="nachname">Nachname:</label>
-        <input type="text" name="nachname"><br><br>
+            {% if fehlermeldung %}
+                <div class="message message-error">{{ fehlermeldung }}</div>
+            {% endif %}
 
-        <button type="submit">Suchen</button>
-    </form>
+            {% if query is not none %}
+                <h3>So sah die tatsächlich ausgeführte Abfrage aus:</h3>
+                <div class="message message-query"><p>{{ query }}</p></div>
+            {% endif %}
 
-    {% if fehlermeldung %}
-        <p style="color:red;">{{ fehlermeldung }}</p>
-    {% endif %}
+            <h3>Brauchst du einen Tipp?</h3>
+            <details>
+                <summary>Hilfe 1</summary>
+                <p>
+                    Achte darauf, dass die Anführungszeichen am Ende zusammenpassen. Probiere als Vorname einmal
+                    <code>Test" OR "1"="1</code> aus. Schau dir danach die ausgeführte Abfrage genau an — kannst
+                    du erklären, warum jetzt alle Einträge erscheinen?
+                </p>
+            </details>
+        </div>
 
-    {% if query is not none %}
-        <h3>Tatsächlich ausgeführte SQL Query.</h3>
-        <p style="color:blue;">{{ query }}</p>
-    {% endif %}
-
-    <h3>Hilfen:</h3>
-    <details>
-    <summary>Hilfe:</summary>
-    <p>Die Anführungszeichen müssen ausgeglichen sein. Versuche daher mal den Vorname <b>Test" OR "1"="1</b>. <br> Kannst du dir das Verhalten erklären?</p>
-    </details>
-
-    {% if daten is not none %}
-        <h2>Suchergebnisse</h2>
-        {% if daten %}
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Adresse</th>
-                </tr>
-                {% for kunde in daten %}
-                <tr>
-                    <td>{{ kunde[0] }}</td>
-                    <td>{{ kunde[1] }}</td>
-                    <td>{{ kunde[2] }}</td>
-                    <td>{{ kunde[3] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>Keine Ergebnisse gefunden.</p>
+        {% if daten is not none %}
+        <div class="card">
+            <h2>Suchergebnisse</h2>
+            {% if daten %}
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Adresse</th>
+                    </tr>
+                    {% for kunde in daten %}
+                    <tr>
+                        <td>{{ kunde[0] }}</td>
+                        <td>{{ kunde[1] }}</td>
+                        <td>{{ kunde[2] }}</td>
+                        <td>{{ kunde[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>Keine Ergebnisse gefunden.</p>
+            {% endif %}
+        </div>
         {% endif %}
-    {% endif %}
-    <a href="/">Zurück</a>
+
+        <a class="back-link" href="/">← Zurück zur Übersicht</a>
+    </div>
 </body>
 </html>
