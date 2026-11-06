@@ -2,16 +2,34 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Herzlich Willkommen zum Adminportal </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login erfolgreich</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Hallo {{ daten[0] }}, herzlich Willkommen zum Adminportal </h1>
-    {% if query %}
-    <h3>Tatsächlich ausgeführte SQL Query:</h3>
-        <p style="color:blue;">{{ query }}</p>
-    {% endif %}
+    <header class="site-header">
+        <div class="page">
+            <h1>🎉 Willkommen, {{ daten[0] }}! <span class="badge badge-success">eingeloggt</span></h1>
+            <p class="subtitle">Der Login war erfolgreich</p>
+        </div>
+    </header>
 
-    <br>
-    <a href="/login">Abmelden</a>
+    <div class="page">
+        <div class="card">
+            <h2>Geschafft!</h2>
+            <p>
+                Du bist jetzt im Adminportal angemeldet — obwohl du vermutlich nicht das echte Passwort kanntest.
+                Das zeigt, wie gefährlich eine ungeschützte Login-Abfrage sein kann: Über eine manipulierte
+                Eingabe lässt sich die Passwortprüfung aushebeln.
+            </p>
+
+            {% if query %}
+                <h3>So sah die tatsächlich ausgeführte Abfrage aus:</h3>
+                <div class="message message-query"><p>{{ query }}</p></div>
+            {% endif %}
+
+            <a class="back-link" href="/login">← Zurück zum Login</a>
+        </div>
+    </div>
 </body>
 </html>

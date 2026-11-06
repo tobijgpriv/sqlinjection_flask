@@ -2,112 +2,152 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Kundensuche</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Level 3 · Kundensuche (abgesichert)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1> Aufgabe:</h1>
-    Diese Seite ist identisch zur Kundensuche. Im Hintergrund wurde die Abfrage jedoch abgesichert. 
+    <header class="site-header">
+        <div class="page">
+            <h1>✅ Kundensuche (abgesichert) <span class="badge badge-success">sicher</span></h1>
+            <p class="subtitle">Level 3 · Vergleich zwischen unsicherem und sicherem Code</p>
+        </div>
+    </header>
 
+    <div class="page">
+        <div class="card">
+            <h2>Aufgabe</h2>
+            <p>
+                Diese Seite sieht genauso aus wie die Kundensuche aus den vorherigen Leveln. Der Unterschied liegt
+                im Hintergrund: Die Datenbankabfrage wurde hier richtig abgesichert.
+            </p>
+            <h3>Ziel</h3>
+            <p>
+                Probiere hier noch einmal die Angriffe aus, die auf den anderen Seiten funktioniert haben. Vergleiche
+                anschließend den Quellcode weiter unten, um zu verstehen, was den Unterschied macht.
+            </p>
 
-<h3>Ziel:</h3>
-    Das Ziel ist es hier die auf den anderen Seiten erfolgreichen Angriffe erneut durchzuführen. Vergleiche danach den Sourcecode der Anwendung (siehe unten).
-    <h1>Kundensuche</h1>
+            <form method="post">
+                <div class="form-grid">
+                    <div>
+                        <label for="vorname">Vorname</label>
+                        <input type="text" id="vorname" name="vorname">
+                    </div>
+                    <div>
+                        <label for="nachname">Nachname</label>
+                        <input type="text" id="nachname" name="nachname">
+                    </div>
+                    <button type="submit">Suchen</button>
+                </div>
+            </form>
 
-    <form method="post">
-        <label for="vorname">Vorname:</label>
-        <input type="text" name="vorname"><br><br>
+            {% if fehlermeldung %}
+                <div class="message message-error">{{ fehlermeldung }}</div>
+            {% endif %}
 
-        <label for="nachname">Nachname:</label>
-        <input type="text" name="nachname"><br><br>
+            {% if query is not none %}
+                <h3>So sah die tatsächlich ausgeführte Abfrage aus:</h3>
+                <div class="message message-query"><p>{{ query }}</p></div>
+            {% endif %}
+        </div>
 
-        <button type="submit">Suchen</button>
-    </form>
+        <div class="card">
+            <h2>Sicheres Programmieren</h2>
+            <p>Vergleiche den unsicheren und den sicheren Code miteinander:</p>
 
-    {% if fehlermeldung %}
-        <p style="color:red;">{{ fehlermeldung }}</p>
-    {% endif %}
+            <details>
+                <summary>Quellcode (unsicher)</summary>
+                <pre>
+conn = get_db_connection()
+if conn is None:
+    fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
+else:
+    try:
+        cursor = conn.cursor()
+        query = f"""
+            SELECT *
+            FROM Kunden
+            WHERE vorname = "{vorname}" OR nachname = "{nachname}"
+        """
+        cursor.execute(query)
+        daten = cursor.fetchall()
+    except Error as e:
+        fehlermeldung = f"Fehler bei der Abfrage: {e}"
+    finally:
+        cursor.close()
+        conn.close()</pre>
+            </details>
 
-    {% if query is not none %}
-        <h3>Tatsächlich ausgeführte SQL Query.</h3>
-        <p style="color:blue;">{{ query }}</p>
-    {% endif %}
+            <details>
+                <summary>Quellcode (sicher)</summary>
+                <pre>
+conn = get_db_connection()
+if conn is None:
+    fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
+else:
+    try:
+        cursor = conn.cursor()
+        query = """
+            SELECT *
+            FROM Kunden
+            WHERE vorname = %s OR nachname = %s
+        """
+        cursor.execute(query, (vorname, nachname))
+        daten = cursor.fetchall()
+        print(daten)
+    except Error as e:
+        fehlermeldung = f"Fehler bei der Abfrage: {e}"
+    finally:
+        cursor.close()
+        conn.close()</pre>
+            </details>
 
-    <h2>Sicheres Programmieren:</h2>
-    <details>
-    <summary>Sourcecode (unsicher):</summary>
-    <pre>       
-        conn = get_db_connection()
-        if conn is None:
-            fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
-        else:
-            try:
-                cursor = conn.cursor()
-                query = f"""
-                    SELECT *
-                    FROM Kunden
-                    WHERE vorname = "{vorname}" OR nachname = "{nachname}"
-                """
-                cursor.execute(query)
-                daten = cursor.fetchall()
-            except Error as e:
-                fehlermeldung = f"Fehler bei der Abfrage: {e}"
-            finally:
-                cursor.close()
-                conn.close()</pre>
-    </details>
-    <details>
-    <summary>Sourcecode (sicher):</summary>
-    <pre>       
-        conn = get_db_connection()
-        if conn is None:
-            fehlermeldung = "Fehler bei der Verbindung zur Datenbank."
-        else:
-            try:
-                cursor = conn.cursor()
-                query = """
-                    SELECT *
-                    FROM Kunden
-                    WHERE vorname = %s OR nachname = %s
-                """
-                cursor.execute(query, (vorname,nachname))
-                daten = cursor.fetchall()
-                print(daten)
-            except Error as e:
-                fehlermeldung = f"Fehler bei der Abfrage: {e}"
-            finally:
-                cursor.close()
-                conn.close()</pre>
-    </details>
-     <details>
-    <summary>Die Lösung <b>Prepared Statements</b></summary>
-    SQL Abfragen können über <b>prepared Statements</b> abgesichert werden. Dabei wird die SQL Abfrage nicht einfach zu einem String zusammengefügt und an die Datenbank gesendet. Wird die SQL Query einfach zusammengefügt, kann ein Angreifer immer auch auf Teile der SQL Abfrage zugreifen auf die er keinen Zugriff haben sollte. 
-    <br> <br>
-    Bei prepared Statements wird die SQL Abfrage zuerst vorbereitet und danach die Nutzereingabe eingefügt, daher kann das Programm zwischen eigentlichem SQL Code und vom Nutzer eingefügtem SQL Code unterschieden werden (siehe sicherer Code). Das Beispiel oben ist in Python geschrieben. Die anderen Sprachen haben aber alle ähnliche Funktionen um den sicheren Zugriff auf die Datenbank zu erlauben!
-    </details>
+            <details>
+                <summary>Die Lösung: Prepared Statements</summary>
+                <p>
+                    SQL-Abfragen lassen sich mit <b>Prepared Statements</b> absichern. Dabei wird die Abfrage
+                    nicht mehr als einfacher Text zusammengebaut und so an die Datenbank geschickt. Genau das ist
+                    im unsicheren Code das Problem: Wird die Abfrage einfach als String zusammengesetzt, kann eine
+                    Angreiferin oder ein Angreifer über die Eingabe auch auf Teile der Abfrage einwirken, auf die
+                    sie oder er eigentlich keinen Zugriff haben sollte.
+                </p>
+                <p>
+                    Bei Prepared Statements wird die Struktur der Abfrage zuerst festgelegt, und erst danach werden
+                    die Nutzereingaben eingesetzt. Die Datenbank weiß so jederzeit genau, was fester SQL-Code ist
+                    und was reine Nutzereingabe ist — eine Nutzereingabe kann die Struktur der Abfrage dadurch nicht
+                    mehr verändern. Das Beispiel oben ist in Python geschrieben, aber nahezu jede Programmiersprache
+                    bietet eine ähnliche Möglichkeit für den sicheren Zugriff auf Datenbanken.
+                </p>
+            </details>
+        </div>
 
-    {% if daten is not none %}
-        <h2>Suchergebnisse</h2>
-        {% if daten %}
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Adresse</th>
-                </tr>
-                {% for kunde in daten %}
-                <tr>
-                    <td>{{ kunde[0] }}</td>
-                    <td>{{ kunde[1] }}</td>
-                    <td>{{ kunde[2] }}</td>
-                    <td>{{ kunde[3] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>Keine Ergebnisse gefunden.</p>
+        {% if daten is not none %}
+        <div class="card">
+            <h2>Suchergebnisse</h2>
+            {% if daten %}
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Adresse</th>
+                    </tr>
+                    {% for kunde in daten %}
+                    <tr>
+                        <td>{{ kunde[0] }}</td>
+                        <td>{{ kunde[1] }}</td>
+                        <td>{{ kunde[2] }}</td>
+                        <td>{{ kunde[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>Keine Ergebnisse gefunden.</p>
+            {% endif %}
+        </div>
         {% endif %}
-    {% endif %}
-    <a href="/">Zurück</a>
+
+        <a class="back-link" href="/">← Zurück zur Übersicht</a>
+    </div>
 </body>
 </html>

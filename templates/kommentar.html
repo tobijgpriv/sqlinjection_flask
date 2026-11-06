@@ -2,83 +2,124 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Kundensuche</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Level 1 · Kommentarzeichen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1> Aufgabe:</h1>
-    Auf dieser Seite kann nach Kunden gesucht werden, die <b>nicht Admin</b> sind. Die im Hintergrund verwendete SQL Query ist:
-    <p style="color:blue;">SELECT * FROM Kunden (WHERE vorname = "{vorname}" OR nachname = "{nachname}") AND vorname != "Admin"</p>
-    Für {vorname} und {nachname} werden in diesem Fall <b>unsicher!</b> die Werte aus den Feldern unten eingesetzt.
+    <header class="site-header">
+        <div class="page">
+            <h1>💬 Kundensuche mit Kommentarzeichen <span class="badge badge-danger">verwundbar</span></h1>
+            <p class="subtitle">Level 1 · SQL-Kommentare gezielt einsetzen</p>
+        </div>
+    </header>
 
+    <div class="page">
+        <div class="card">
+            <h2>Aufgabe</h2>
+            <p>
+                Diese Suche zeigt absichtlich <strong>keine</strong> Kundinnen oder Kunden mit dem Vornamen
+                <b>Admin</b> an. Im Hintergrund wird folgende Abfrage verwendet:
+            </p>
+            <div class="query-preview">SELECT * FROM Kunden WHERE (vorname = "{vorname}" OR nachname = "{nachname}") AND vorname != "Admin"</div>
+            <p>
+                Auch hier werden <code>{vorname}</code> und <code>{nachname}</code> <strong>ungeprüft</strong> aus
+                den Eingabefeldern übernommen.
+            </p>
 
-    <p style="border: 1px solid black;">
-    <summary><b>SQL-Injection Kommentar</b></summary>
-    Bei einer SQL-Injection ist das Ziel mit den Eingabemöglichkeiten (wie z.B: hier Vorname und Nachname) die SQL Query so zu verändern, dass zum Beispiel mehr Informationen ausgegeben werden als vorgesehen. Mit dem Kommentarzeichen (--) kann man den Rest eines SQL Befehls abschneiden. Dann können zum Beispiel Einschränkungen umgangen werden.<br>
-    <br>
-    </p>
+            <details>
+                <summary>Was bringt mir hier das Kommentarzeichen?</summary>
+                <p>
+                    Bei einer SQL-Injection verändert man die Datenbankabfrage über Eingabefelder, um mehr
+                    Informationen zu bekommen als eigentlich erlaubt. Mit dem SQL-Kommentarzeichen
+                    <code>--</code> kann man den Rest einer Abfrage „abschneiden“: Alles, was danach kommt, wird
+                    von der Datenbank ignoriert. Dadurch lassen sich zum Beispiel zusätzliche Bedingungen —
+                    wie hier der Ausschluss von „Admin“ — einfach umgehen.
+                </p>
+            </details>
 
-    <b>Hinweis:  Bei einem einzeiligen Kommentar muss vor und nach dem -- ein Leerzeichen sein!</b>
+            <div class="warning-box">
+                <strong>Wichtig:</strong> Vor und nach dem Kommentarzeichen <code>--</code> muss jeweils ein
+                Leerzeichen stehen, damit MySQL es als Kommentar erkennt.
+            </div>
+        </div>
 
-<h3>Ziel:</h3>
-    Das Ziel ist es hier die Daten des Accounts mit dem Vornamen "Admin" auszulesen.
-    <h1>Kundensuche</h1>
+        <div class="card">
+            <h2>Ziel dieses Levels</h2>
+            <p>Lies die Daten des Kontos mit dem Vornamen <strong>Admin</strong> aus, obwohl die Abfrage diesen Namen eigentlich ausschließt.</p>
 
-    <form method="post">
-        <label for="vorname">Vorname:</label>
-        <input type="text" name="vorname" value="Michaela"><br><br>
+            <form method="post">
+                <div class="form-grid">
+                    <div>
+                        <label for="vorname">Vorname</label>
+                        <input type="text" id="vorname" name="vorname" value="Michaela">
+                    </div>
+                    <div>
+                        <label for="nachname">Nachname</label>
+                        <input type="text" id="nachname" name="nachname">
+                    </div>
+                    <button type="submit">Suchen</button>
+                </div>
+            </form>
 
-        <label for="nachname">Nachname:</label>
-        <input type="text" name="nachname"><br><br>
+            {% if fehlermeldung %}
+                <div class="message message-error">{{ fehlermeldung }}</div>
+            {% endif %}
 
-        <button type="submit">Suchen</button>
-    </form>
+            {% if query is not none %}
+                <h3>So sah die tatsächlich ausgeführte Abfrage aus:</h3>
+                <div class="message message-query"><p>{{ query }}</p></div>
+            {% endif %}
 
-    {% if fehlermeldung %}
-        <p style="color:red;">{{ fehlermeldung }}</p>
-    {% endif %}
+            <h3>Brauchst du einen Tipp?</h3>
+            <details>
+                <summary>Hilfe 1</summary>
+                <p>
+                    Verwende das Kommentarzeichen <code>--</code>. Alles, was danach steht, wird nicht mehr
+                    ausgeführt. Achte trotzdem darauf, dass Klammern und Anführungszeichen bis zu diesem Punkt
+                    korrekt geschlossen sind.
+                </p>
+            </details>
+            <details>
+                <summary>Hilfe 2</summary>
+                <p>
+                    Das Kommentarzeichen muss außerhalb der Anführungszeichen und außerhalb der Klammer stehen.
+                    Auch davor müssen Anführungszeichen und Klammer bereits korrekt geschlossen sein.
+                </p>
+            </details>
+            <details>
+                <summary>Lösung</summary>
+                <p>Trage als Vorname ein: <code>Admin") -- "</code></p>
+            </details>
+        </div>
 
-    {% if query is not none %}
-        <h3>Tatsächlich ausgeführte SQL Query.</h3>
-        <p style="color:blue;">{{ query }}</p>
-    {% endif %}
-
-    <h3>Hilfen:</h3>
-    <details>
-    <summary>Hilfe:</summary>
-    <p>Du kannst das Kommentarzeichen (--) verwenden. Alles nach diesem Kommentarzeichen, wird nicht mehr ausgeführt. Klammern und Anführungszeichen müssen jedoch immernoch stimmen! </p>
-    </details>
-    <details>
-    <summary>Hilfe 2:</summary>
-    <p>Das Kommentarzeichen muss außerhalb der Anführungszeichen und der Klammer stehen und auch danach müssen die Anführungszeichen passen.</p>
-    </details>
-    <details>
-    <summary>Lösung:</summary>
-    <p>Vorname muss sein: Admin") -- "</p>
-    </details>
-
-    {% if daten is not none %}
-        <h2>Suchergebnisse</h2>
-        {% if daten %}
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Adresse</th>
-                </tr>
-                {% for kunde in daten %}
-                <tr>
-                    <td>{{ kunde[0] }}</td>
-                    <td>{{ kunde[1] }}</td>
-                    <td>{{ kunde[2] }}</td>
-                    <td>{{ kunde[3] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>Keine Ergebnisse gefunden.</p>
+        {% if daten is not none %}
+        <div class="card">
+            <h2>Suchergebnisse</h2>
+            {% if daten %}
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Adresse</th>
+                    </tr>
+                    {% for kunde in daten %}
+                    <tr>
+                        <td>{{ kunde[0] }}</td>
+                        <td>{{ kunde[1] }}</td>
+                        <td>{{ kunde[2] }}</td>
+                        <td>{{ kunde[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>Keine Ergebnisse gefunden.</p>
+            {% endif %}
+        </div>
         {% endif %}
-    {% endif %}
-    <a href="/">Zurück</a>
+
+        <a class="back-link" href="/">← Zurück zur Übersicht</a>
+    </div>
 </body>
 </html>
